@@ -10,9 +10,19 @@ public class Radix{
   }
 
   public static void merge(MyLinkedList original, MyLinkedList[] buckets){
-    for (int i = 0; i < buckets.length; i++){
+    original = buckets[0];
+    for (int i = 1; i < buckets.length; i++){
       original.extend(buckets[i]);
     }
+  }
+
+  public static void main(String[] args) {
+    MyLinkedList original = new MyLinkedList();
+    for (int i = 0; i < 10; i++){
+      original.add(String.valueOf(i));
+    }
+    System.out.println(original);
+
   }
 
 }
