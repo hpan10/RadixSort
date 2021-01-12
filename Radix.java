@@ -1,3 +1,4 @@
+import java.util.Arrays;
 public class Radix{
 
   public static int nth(int n, int col){
@@ -9,20 +10,62 @@ public class Radix{
     return (int) Math.log10(Math.abs(n)) + 1;
   }
 
-  public static void merge(MyLinkedList original, MyLinkedList[] buckets){
-    original = buckets[0];
-    for (int i = 1; i < buckets.length; i++){
+  public static void merge(SortableLinkedList original, SortableLinkedList[] buckets){
+    for (int i = 0; i < buckets.length; i++){
       original.extend(buckets[i]);
     }
   }
 
-  public static void main(String[] args) {
-    MyLinkedList original = new MyLinkedList();
+  private static SortableLinkedList[] makeArray(){
+    SortableLinkedList[] a =  new SortableLinkedList[10];
     for (int i = 0; i < 10; i++){
-      original.add(String.valueOf(i));
+      a[i] = new SortableLinkedList();
     }
-    System.out.println(original);
+    return a;
+  }
 
+  public static void radixSortSimple(SortableLinkedList data){
+    SortableLinkedList[] buckets = makeArray();
+    int longest = 0;
+    while (data.size() > 0){
+      if (length(data.get(0)) > longest) longest = length(data.get(0));
+      buckets[nth(data.get(0), 0)].add(data.get(0));
+      data.remove(0);
+    }
+    merge(data, buckets);
+    for (int start = 1; start < longest; start++){
+      buckets = makeArray();
+      while (data.size() > 0){
+        buckets[nth(data.get(0), start)].add(data.get(0));
+        data.remove(0);
+      }
+      merge(data, buckets);
+    }
+  }
+
+  public static void radixSort(SortableLinkedList data){
+    SortableLinkedList[] buckets = makeArray();
+    SortableLinkedList[] negativeBuckets = makeArray();
+    int longest = 0;
+    while (data.size() > 0){
+      if (length(data.get(0)) > longest) longest = length(data.get(0));
+      if (data.get(0) < 0) negativeBuckets[9 - nth(data.get(0), 0)].add(data.get(0));
+      else buckets[nth(data.get(0), 0)].add(data.get(0));
+      data.remove(0);
+    }
+    merge(data, negativeBuckets);
+    merge(data, buckets);
+    for (int start = 1; start < longest; start++){
+      buckets = makeArray();
+      negativeBuckets = makeArray();
+      while (data.size() > 0){
+        if (data.get(0) < 0) negativeBuckets[9 - nth(data.get(0), start)].add(data.get(0));
+        else buckets[nth(data.get(0), start)].add(data.get(0));
+        data.remove(0);
+      }
+      merge(data, negativeBuckets);
+      merge(data, buckets);
+    }
   }
 
 }
