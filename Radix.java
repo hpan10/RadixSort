@@ -1,4 +1,3 @@
-import java.util.Arrays;
 public class Radix{
 
   public static int nth(int n, int col){
@@ -28,16 +27,15 @@ public class Radix{
     SortableLinkedList[] buckets = makeArray();
     int longest = 0;
     while (data.size() > 0){
-      if (length(data.get(0)) > longest) longest = length(data.get(0));
-      buckets[nth(data.get(0), 0)].add(data.get(0));
-      data.remove(0);
+      int value = data.remove(0);
+      if (length(value) > longest) longest = length(value);
+      buckets[nth(value, 0)].add(value);
     }
     merge(data, buckets);
     for (int start = 1; start < longest; start++){
-      buckets = makeArray();
       while (data.size() > 0){
-        buckets[nth(data.get(0), start)].add(data.get(0));
-        data.remove(0);
+        int value = data.remove(0);
+        buckets[nth(value, start)].add(value);
       }
       merge(data, buckets);
     }
@@ -48,20 +46,18 @@ public class Radix{
     SortableLinkedList[] negativeBuckets = makeArray();
     int longest = 0;
     while (data.size() > 0){
-      if (length(data.get(0)) > longest) longest = length(data.get(0));
-      if (data.get(0) < 0) negativeBuckets[9 - nth(data.get(0), 0)].add(data.get(0));
-      else buckets[nth(data.get(0), 0)].add(data.get(0));
-      data.remove(0);
+      int value = data.remove(0);
+      if (length(value) > longest) longest = length(value);
+      if (value < 0) negativeBuckets[9 - nth(value, 0)].add(value);
+      else buckets[nth(value, 0)].add(value);
     }
     merge(data, negativeBuckets);
     merge(data, buckets);
     for (int start = 1; start < longest; start++){
-      buckets = makeArray();
-      negativeBuckets = makeArray();
       while (data.size() > 0){
-        if (data.get(0) < 0) negativeBuckets[9 - nth(data.get(0), start)].add(data.get(0));
-        else buckets[nth(data.get(0), start)].add(data.get(0));
-        data.remove(0);
+        int value = data.remove(0);
+        if (value < 0) negativeBuckets[9 - nth(value, start)].add(value);
+        else buckets[nth(value, start)].add(value);
       }
       merge(data, negativeBuckets);
       merge(data, buckets);
